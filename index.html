@@ -1,0 +1,2014 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen MIPS - Organización de Computadores</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        nav {
+            background: #2c3e50;
+            padding: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        nav button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+        
+        nav button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h2 {
+            color: #2c3e50;
+            font-size: 2em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+        }
+        
+        h3 {
+            color: #34495e;
+            font-size: 1.5em;
+            margin: 25px 0 15px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        h3:before {
+            content: "▶";
+            color: #3498db;
+            margin-right: 10px;
+        }
+        
+        .principle-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .principle-box h4 {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+        
+        .info-box {
+            background: #ecf0f1;
+            border-left: 5px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .code-box {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .code-box code {
+            display: block;
+            white-space: pre;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-table th {
+            background: #3498db;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+        
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .comparison-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .register-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .register-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .register-card strong {
+            display: block;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+        
+        .quiz-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+        
+        .quiz-question {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .quiz-question h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .quiz-options {
+            margin: 15px 0;
+        }
+        
+        .quiz-options label {
+            display: block;
+            padding: 10px;
+            margin: 5px 0;
+            background: #ecf0f1;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .quiz-options label:hover {
+            background: #3498db;
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .quiz-options input {
+            margin-right: 10px;
+        }
+        
+        .check-answer {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+        
+        .check-answer:hover {
+            background: #229954;
+            transform: scale(1.05);
+        }
+        
+        .answer-feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .answer-feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        
+        .answer-feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+        
+        .memory-diagram {
+            background: white;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .memory-cell {
+            display: flex;
+            border-bottom: 1px solid #ecf0f1;
+            padding: 10px;
+        }
+        
+        .memory-cell:last-child {
+            border-bottom: none;
+        }
+        
+        .memory-address {
+            background: #3498db;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 5px;
+            min-width: 120px;
+            text-align: center;
+        }
+        
+        .memory-value {
+            flex: 1;
+            padding: 5px 15px;
+            background: #ecf0f1;
+            margin-left: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Resumen: Lenguaje Ensamblador MIPS</h1>
+            <p>Organización de Computadores - USACH 2024</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">Prof. Viktor Tapia</p>
+        </header>
+        
+        <nav>
+            <button onclick="showSection('intro')">Introducción</button>
+            <button onclick="showSection('principles')">Principios de Diseño</button>
+            <button onclick="showSection('instructions')">Instrucciones</button>
+            <button onclick="showSection('registers')">Registros</button>
+            <button onclick="showSection('memory')">Memoria</button>
+            <button onclick="showSection('machine')">Lenguaje Máquina</button>
+            <button onclick="showSection('control')">Control de Flujo</button>
+            <button onclick="showSection('functions')">Funciones</button>
+            <button onclick="showSection('quiz')">Quiz Final</button>
+        </nav>
+        
+        <div class="content">
+            <!-- INTRODUCCIÓN -->
+            <div id="intro" class="section active">
+                <h2>🎯 Introducción a MIPS</h2>
+                
+                <div class="info-box">
+                    <h3>¿Qué es MIPS?</h3>
+                    <p><strong>MIPS</strong> (Microprocessor without Interlocked Pipeline Stages) es una arquitectura de computador desarrollada por <strong>John Hennessy</strong> y sus colegas en Stanford en los años 1980.</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>✅ Usada en sistemas comerciales: Silicon Graphics, Nintendo, Cisco</li>
+                        <li>✅ Arquitectura RISC (Reduced Instruction Set Computer)</li>
+                        <li>✅ Opera con datos de 32 bits</li>
+                        <li>✅ Tiene 32 registros de 32 bits cada uno</li>
+                    </ul>
+                </div>
+                
+                <h3>Niveles de Abstracción</h3>
+                <div class="comparison-table">
+                    <table style="width: 100%">
+                        <tr>
+                            <th>Nivel</th>
+                            <th>Descripción</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Alto Nivel</strong></td>
+                            <td>Lenguajes de programación (C, Java, Python)</td>
+                            <td><code>a = b + c;</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ensamblador</strong></td>
+                            <td>Formato legible por humanos</td>
+                            <td><code>add $s0, $s1, $s2</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Máquina</strong></td>
+                            <td>Formato binario (1's y 0's)</td>
+                            <td><code>00000010001100100100000000100000</code></td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="principle-box">
+                    <h4>💡 Concepto Clave</h4>
+                    <p><strong>Arquitectura:</strong> Vista del programador sobre el computador (instrucciones y ubicación de operandos)</p>
+                    <p><strong>Microarquitectura:</strong> Cómo implementar la arquitectura en hardware</p>
+                </div>
+            </div>
+            
+            <!-- PRINCIPIOS DE DISEÑO -->
+            <div id="principles" class="section">
+                <h2>⚙️ Principios de Diseño de MIPS</h2>
+                
+                <p>Hennessy y Patterson establecieron 4 principios fundamentales:</p>
+                
+                <div class="principle-box">
+                    <h4>1️⃣ La Simplicidad Favorece la Regularidad</h4>
+                    <p>✅ Formato de instrucción consistente</p>
+                    <p>✅ Mismo número de operandos (dos fuentes y un destino)</p>
+                    <p>✅ Más fácil de codificar y manejar en hardware</p>
+                    <div class="code-box">
+                        <code>add a, b, c    # a = b + c
+sub d, e, f    # d = e - f
+# Siempre: destino, fuente1, fuente2</code>
+                    </div>
+                </div>
+                
+                <div class="principle-box">
+                    <h4>2️⃣ Hacer el Caso Común Rápido</h4>
+                    <p>✅ MIPS incluye solo instrucciones simples y comúnmente usadas</p>
+                    <p>✅ Hardware de decodificación simple, pequeño y rápido</p>
+                    <p>✅ Instrucciones complejas se hacen con múltiples instrucciones simples</p>
+                    <div class="code-box">
+                        <code># C: a = b + c - d;
+# MIPS:
+add $t0, $s1, $s2    # $t0 = b + c
+sub $s0, $t0, $s3    # a = $t0 - d</code>
+                    </div>
+                </div>
+                
+                <div class="principle-box">
+                    <h4>3️⃣ Más Pequeño es Más Rápido</h4>
+                    <p>✅ MIPS tiene solo 32 registros</p>
+                    <p>✅ Los registros son MUY rápidos (más que la memoria)</p>
+                    <p>✅ Número limitado permite acceso más rápido</p>
+                </div>
+                
+                <div class="principle-box">
+                    <h4>4️⃣ El Buen Diseño Demanda Buenos Compromisos</h4>
+                    <p>✅ Múltiples formatos de instrucción permiten flexibilidad</p>
+                    <p>✅ Pero se mantiene el número de formatos pequeño</p>
+                    <p>✅ Balancea los principios 1 y 3</p>
+                </div>
+                
+                <div class="warning-box">
+                    <h4>⚔️ RISC vs CISC</h4>
+                    <p><strong>RISC</strong> (MIPS): Conjunto reducido de instrucciones simples</p>
+                    <p><strong>CISC</strong> (x86 Intel): Conjunto complejo de instrucciones</p>
+                </div>
+            </div>
+            
+            <!-- INSTRUCCIONES BÁSICAS -->
+            <div id="instructions" class="section">
+                <h2>📝 Instrucciones Básicas</h2>
+                
+                <h3>Operaciones Aritméticas</h3>
+                
+                <div class="comparison-table">
+                    <table style="width: 100%">
+                        <tr>
+                            <th>Código C</th>
+                            <th>MIPS Assembly</th>
+                            <th>Descripción</th>
+                        </tr>
+                        <tr>
+                            <td><code>a = b + c;</code></td>
+                            <td><code>add $s0, $s1, $s2</code></td>
+                            <td>Suma: $s0 = $s1 + $s2</td>
+                        </tr>
+                        <tr>
+                            <td><code>a = b - c;</code></td>
+                            <td><code>sub $s0, $s1, $s2</code></td>
+                            <td>Resta: $s0 = $s1 - $s2</td>
+                        </tr>
+                        <tr>
+                            <td><code>a = a + 4;</code></td>
+                            <td><code>addi $s0, $s0, 4</code></td>
+                            <td>Suma inmediata</td>
+                        </tr>
+                        <tr>
+                            <td><code>b = a - 12;</code></td>
+                            <td><code>addi $s1, $s0, -12</code></td>
+                            <td>Resta con inmediato negativo</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="info-box">
+                    <h4>🎯 Formato de Instrucción</h4>
+                    <p><code>operación destino, fuente1, fuente2</code></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>operación:</strong> add, sub, addi, etc.</li>
+                        <li><strong>destino:</strong> donde se guarda el resultado</li>
+                        <li><strong>fuente1, fuente2:</strong> operandos de entrada</li>
+                    </ul>
+                </div>
+                
+                <h3>Operaciones Lógicas</h3>
+                
+                <div class="code-box">
+                    <code># AND: útil para enmascarar bits
+and $t0, $t1, $t2    # $t0 = $t1 AND $t2
+andi $t0, $t1, 0xFF  # $t0 = $t1 AND 0x000000FF
+
+# OR: útil para combinar campos de bits
+or $t0, $t1, $t2     # $t0 = $t1 OR $t2
+ori $t0, $t1, 0xFF   # $t0 = $t1 OR 0x000000FF
+
+# XOR: útil para invertir bits específicos
+xor $t0, $t1, $t2    # $t0 = $t1 XOR $t2
+
+# NOR: útil para invertir todos los bits
+nor $t0, $t1, $0     # $t0 = NOT $t1</code>
+                </div>
+                
+                <div class="info-box">
+                    <h4>📌 Ejemplo Práctico: Enmascaramiento</h4>
+                    <p>Extraer solo el byte menos significativo:</p>
+                    <div class="code-box">
+                        <code># 0xF234012F AND 0x000000FF = 0x0000002F
+andi $t0, $s0, 0xFF</code>
+                    </div>
+                </div>
+                
+                <h3>Operaciones de Desplazamiento</h3>
+                
+                <div class="comparison-table">
+                    <table style="width: 100%">
+                        <tr>
+                            <th>Instrucción</th>
+                            <th>Descripción</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                        <tr>
+                            <td><code>sll</code></td>
+                            <td>Shift Left Logical</td>
+                            <td><code>sll $t0, $t1, 2</code> → $t0 = $t1 × 4</td>
+                        </tr>
+                        <tr>
+                            <td><code>srl</code></td>
+                            <td>Shift Right Logical</td>
+                            <td><code>srl $t0, $t1, 2</code> → $t0 = $t1 / 4</td>
+                        </tr>
+                        <tr>
+                            <td><code>sra</code></td>
+                            <td>Shift Right Arithmetic</td>
+                            <td><code>sra $t0, $t1, 2</code> → división con signo</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="warning-box">
+                    <h4>⚠️ Diferencia SRL vs SRA</h4>
+                    <p><strong>SRL:</strong> Rellena con 0's (división sin signo)</p>
+                    <p><strong>SRA:</strong> Preserva el bit de signo (división con signo)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showSection(sectionId) {
+            // Ocultar todas las secciones
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Mostrar la sección seleccionada
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Scroll al inicio
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>  
+<!-- Continúa después de la sección de instructions -->
+
+<!-- REGISTROS -->
+<div id="registers" class="section">
+    <h2>🗂️ Registros de MIPS</h2>
+    
+    <div class="info-box">
+        <h4>📊 Características</h4>
+        <ul style="margin-left: 20px;">
+            <li>MIPS tiene <strong>32 registros</strong> de <strong>32 bits</strong> cada uno</li>
+            <li>Se identifican con el símbolo <strong>$</strong></li>
+            <li>Son MUY rápidos (más que la memoria)</li>
+            <li>Cada registro tiene un propósito específico</li>
+        </ul>
+    </div>
+    
+    <h3>Tabla Completa de Registros</h3>
+    
+    <div class="comparison-table">
+        <table style="width: 100%">
+            <tr>
+                <th>Nombre</th>
+                <th>Número</th>
+                <th>Uso</th>
+            </tr>
+            <tr style="background: #ffe6e6;">
+                <td><code>$0</code> (zero)</td>
+                <td>0</td>
+                <td>Siempre contiene el valor 0</td>
+            </tr>
+            <tr>
+                <td><code>$at</code></td>
+                <td>1</td>
+                <td>Temporal del ensamblador</td>
+            </tr>
+            <tr style="background: #e6f3ff;">
+                <td><code>$v0-$v1</code></td>
+                <td>2-3</td>
+                <td>Valores de retorno de funciones</td>
+            </tr>
+            <tr style="background: #fff4e6;">
+                <td><code>$a0-$a3</code></td>
+                <td>4-7</td>
+                <td>Argumentos de funciones</td>
+            </tr>
+            <tr style="background: #e6ffe6;">
+                <td><code>$t0-$t7</code></td>
+                <td>8-15</td>
+                <td>Temporales (no se preservan)</td>
+            </tr>
+            <tr style="background: #f3e6ff;">
+                <td><code>$s0-$s7</code></td>
+                <td>16-23</td>
+                <td>Variables guardadas (se preservan)</td>
+            </tr>
+            <tr style="background: #e6ffe6;">
+                <td><code>$t8-$t9</code></td>
+                <td>24-25</td>
+                <td>Más temporales</td>
+            </tr>
+            <tr>
+                <td><code>$k0-$k1</code></td>
+                <td>26-27</td>
+                <td>Reservados para el SO</td>
+            </tr>
+            <tr style="background: #ffe6f3;">
+                <td><code>$gp</code></td>
+                <td>28</td>
+                <td>Global pointer</td>
+            </tr>
+            <tr style="background: #ffe6f3;">
+                <td><code>$sp</code></td>
+                <td>29</td>
+                <td>Stack pointer (puntero de pila)</td>
+            </tr>
+            <tr style="background: #ffe6f3;">
+                <td><code>$fp</code></td>
+                <td>30</td>
+                <td>Frame pointer</td>
+            </tr>
+            <tr style="background: #e6f3ff;">
+                <td><code>$ra</code></td>
+                <td>31</td>
+                <td>Return address (dirección de retorno)</td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="register-grid">
+        <div class="register-card">
+            <strong>$0 (zero)</strong>
+            <p>ESPECIAL: Siempre vale 0. Muy útil para inicializaciones.</p>
+            <code>add $t0, $0, $s1  # $t0 = $s1</code>
+        </div>
+        
+        <div class="register-card">
+            <strong>$s0-$s7 (saved)</strong>
+            <p>Para variables importantes que deben mantenerse.</p>
+            <code>add $s0, $s1, $s2  # a = b + c</code>
+        </div>
+        
+        <div class="register-card">
+            <strong>$t0-$t9 (temporaries)</strong>
+            <p>Para cálculos intermedios temporales.</p>
+            <code>add $t0, $s1, $s2  # temp = b + c</code>
+        </div>
+        
+        <div class="register-card">
+            <strong>$a0-$a3 (arguments)</strong>
+            <p>Para pasar argumentos a funciones.</p>
+            <code>addi $a0, $0, 5  # arg1 = 5</code>
+        </div>
+        
+        <div class="register-card">
+            <strong>$v0-$v1 (values)</strong>
+            <p>Para retornar valores de funciones.</p>
+            <code>add $v0, $a0, $a1  # return a+b</code>
+        </div>
+        
+        <div class="register-card">
+            <strong>$ra (return address)</strong>
+            <p>Guarda la dirección de retorno de funciones.</p>
+            <code>jr $ra  # retornar</code>
+        </div>
+    </div>
+    
+    <div class="warning-box">
+        <h4>⚠️ Regla Importante</h4>
+        <p><strong>Registros Preservados (Callee-Saved):</strong> $s0-$s7, $ra, $sp</p>
+        <p>→ Las funciones DEBEN guardar y restaurar estos registros</p>
+        <p><strong>Registros No Preservados (Caller-Saved):</strong> $t0-$t9, $a0-$a3, $v0-$v1</p>
+        <p>→ Se pueden sobrescribir libremente</p>
+    </div>
+</div>
+
+<!-- MEMORIA -->
+<div id="memory" class="section">
+    <h2>💾 Memoria en MIPS</h2>
+    
+    <div class="info-box">
+        <h4>🎯 ¿Por qué necesitamos memoria?</h4>
+        <p>Solo tenemos 32 registros, pero necesitamos almacenar MUCHA más información:</p>
+        <ul style="margin-left: 20px; margin-top: 10px;">
+            <li>✅ Arrays grandes</li>
+            <li>✅ Estructuras de datos complejas</li>
+            <li>✅ Variables que no caben en registros</li>
+        </ul>
+    </div>
+    
+    <h3>Direccionamiento de Bytes (Byte-Addressable)</h3>
+    
+    <div class="principle-box">
+        <h4>📏 Concepto Clave</h4>
+        <p>MIPS usa <strong>direccionamiento de bytes</strong>:</p>
+        <ul style="margin-left: 20px; margin-top: 10px;">
+            <li>Cada BYTE tiene su propia dirección única</li>
+            <li>Una palabra (word) = 4 bytes = 32 bits</li>
+            <li>Las direcciones de palabras son múltiplos de 4</li>
+        </ul>
+    </div>
+    
+    <div class="memory-diagram">
+        <h4>Ejemplo de Memoria:</h4>
+        <div class="memory-cell">
+            <div class="memory-address">0x00000000</div>
+            <div class="memory-value">Palabra 0 (bytes 0-3)</div>
+        </div>
+        <div class="memory-cell">
+            <div class="memory-address">0x00000004</div>
+            <div class="memory-value">Palabra 1 (bytes 4-7)</div>
+        </div>
+        <div class="memory-cell">
+            <div class="memory-address">0x00000008</div>
+            <div class="memory-value">Palabra 2 (bytes 8-11)</div>
+        </div>
+        <div class="memory-cell">
+            <div class="memory-address">0x0000000C</div>
+            <div class="memory-value">Palabra 3 (bytes 12-15)</div>
+        </div>
+    </div>
+    
+    <h3>Instrucciones de Carga (Load)</h3>
+    
+    <div class="code-box">
+        <code># Load Word (lw) - Cargar palabra
+lw $s3, 4($0)      # $s3 = Memory[4]
+# Dirección = $0 + 4 = 4
+
+lw $t0, 8($s0)     # $t0 = Memory[$s0 + 8]
+# Dirección = valor en $s0 + 8
+
+# Load Byte (lb) - Cargar byte
+lb $t1, 0($s1)     # $t1 = Memory[$s1] (1 byte)</code>
+    </div>
+    
+    <div class="info-box">
+        <h4>🔍 Formato de Load</h4>
+        <p><code>lw registro_destino, offset(registro_base)</code></p>
+        <p><strong>Dirección efectiva = registro_base + offset</strong></p>
+    </div>
+    
+    <h3>Instrucciones de Almacenamiento (Store)</h3>
+    
+    <div class="code-box">
+        <code># Store Word (sw) - Guardar palabra
+sw $t4, 7($0)      # Memory[7] = $t4
+# Dirección = $0 + 7 = 7
+
+sw $s1, 12($sp)    # Memory[$sp + 12] = $s1
+# Guarda en la pila
+
+# Store Byte (sb) - Guardar byte
+sb $t2, 0($s0)     # Memory[$s0] = $t2 (1 byte)</code>
+    </div>
+    
+    <h3>Big-Endian vs Little-Endian</h3>
+    
+    <div class="comparison-table">
+        <table style="width: 100%">
+            <tr>
+                <th>Sistema</th>
+                <th>Orden de Bytes</th>
+                <th>Ejemplo: 0x23456789</th>
+            </tr>
+            <tr>
+                <td><strong>Big-Endian</strong></td>
+                <td>Byte más significativo primero</td>
+                <td>
+                    Dir 0: 0x23<br>
+                    Dir 1: 0x45<br>
+                    Dir 2: 0x67<br>
+                    Dir 3: 0x89
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Little-Endian</strong></td>
+                <td>Byte menos significativo primero</td>
+                <td>
+                    Dir 0: 0x89<br>
+                    Dir 1: 0x67<br>
+                    Dir 2: 0x45<br>
+                    Dir 3: 0x23
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="warning-box">
+        <h4>📚 Curiosidad: Gulliver's Travels</h4>
+        <p>El nombre viene del libro de Jonathan Swift:</p>
+        <p>Los <strong>Little-Endians</strong> rompían sus huevos por el extremo pequeño</p>
+        <p>Los <strong>Big-Endians</strong> los rompían por el extremo grande</p>
+        <p>🤔 ¡No importa cuál uses, siempre que seas consistente!</p>
+    </div>
+    
+    <h3>Ejemplo Práctico</h3>
+    
+    <div class="code-box">
+        <code># Supongamos $t0 = 0x23456789
+
+# Guardar en memoria
+sw $t0, 0($0)      # Guarda la palabra en dirección 0
+
+# Cargar un byte
+lb $s0, 1($0)      # Carga el byte en dirección 1
+
+# En Big-Endian: $s0 = 0x00000045
+# En Little-Endian: $s0 = 0x00000067</code>
+    </div>
+</div>
+<!-- LENGUAJE MÁQUINA -->
+<div id="machine" class="section">
+    <h2>🔢 Lenguaje Máquina</h2>
+    
+    <div class="info-box">
+        <h4>💡 Concepto Fundamental</h4>
+        <p>Las instrucciones en ensamblador se traducen a números binarios (1's y 0's)</p>
+        <p>Cada instrucción MIPS = <strong>32 bits</strong></p>
+        <p>Existen <strong>3 formatos</strong> de instrucción:</p>
+        <ul style="margin-left: 20px;">
+            <li><strong>R-Type:</strong> Operandos en registros</li>
+            <li><strong>I-Type:</strong> Con valor inmediato</li>
+            <li><strong>J-Type:</strong> Para saltos (jumps)</li>
+        </ul>
+    </div>
+    
+    <h3>Formato R-Type (Register)</h3>
+    
+    <div class="code-box">
+        <code>┌──────┬──────┬──────┬──────┬──────┬────────┐
+│  op  │  rs  │  rt  │  rd  │shamt │  funct │
+│ 6bit │ 5bit │ 5bit │ 5bit │ 5bit │  6bit  │
+└──────┴──────┴──────┴──────┴──────┴────────┘
+
+op     = código de operación (0 para R-Type)
+rs     = registro fuente 1
+rt     = registro fuente 2
+rd     = registro destino
+shamt  = cantidad de desplazamiento (0 si no es shift)
+funct  = función específica (identifica la operación)</code>
+    </div>
+    
+    <div class="principle-box">
+        <h4>📌 Ejemplo: add $s0, $s1, $s2</h4>
+        <table style="width: 100%; color: white; margin-top: 10px;">
+            <tr>
+                <td><strong>op</strong></td>
+                <td><strong>rs</strong></td>
+                <td><strong>rt</strong></td>
+                <td><strong>rd</strong></td>
+                <td><strong>shamt</strong></td>
+                <td><strong>funct</strong></td>
+            </tr>
+            <tr>
+                <td>000000</td>
+                <td>10001</td>
+                <td>10010</td>
+                <td>10000</td>
+                <td>00000</td>
+                <td>100000</td>
+            </tr>
+            <tr style="font-size: 0.9em;">
+                <td>(0)</td>
+                <td>($s1=17)</td>
+                <td>($s2=18)</td>
+                <td>($s0=16)</td>
+                <td>(0)</td>
+                <td>(add=32)</td>
+            </tr>
+        </table>
+        <p style="margin-top: 10px;"><strong>Binario completo:</strong></p>
+        <code>00000010001100100100000000100000</code>
+        <p><strong>Hexadecimal:</strong> 0x02324020</p>
+    </div>
+    
+    <div class="comparison-table">
+        <h4>Instrucciones R-Type Comunes:</h4>
+        <table style="width: 100%">
+            <tr>
+                <th>Instrucción</th>
+                <th>funct (decimal)</th>
+                <th>funct (binario)</th>
+            </tr>
+            <tr>
+                <td>add</td>
+                <td>32</td>
+                <td>100000</td>
+            </tr>
+            <tr>
+                <td>sub</td>
+                <td>34</td>
+                <td>100010</td>
+            </tr>
+            <tr>
+                <td>and</td>
+                <td>36</td>
+                <td>100100</td>
+            </tr>
+            <tr>
+                <td>or</td>
+                <td>37</td>
+                <td>100101</td>
+            </tr>
+            <tr>
+                <td>slt</td>
+                <td>42</td>
+                <td>101010</td>
+            </tr>
+        </table>
+    </div>
+    
+    <h3>Formato I-Type (Immediate)</h3>
+    
+    <div class="code-box">
+        <code>┌──────┬──────┬──────┬─────────────────┐
+│  op  │  rs  │  rt  │       imm       │
+│ 6bit │ 5bit │ 5bit │      16bit      │
+└──────┴──────┴──────┴─────────────────┘
+
+op  = código de operación (identifica la instrucción)
+rs  = registro fuente (o base para lw/sw)
+rt  = registro destino (o dato para sw)
+imm = valor inmediato de 16 bits (con signo)</code>
+    </div>
+    
+    <div class="principle-box">
+        <h4>📌 Ejemplo: addi $s0, $s1, 5</h4>
+        <table style="width: 100%; color: white; margin-top: 10px;">
+            <tr>
+                <td><strong>op</strong></td>
+                <td><strong>rs</strong></td>
+                <td><strong>rt</strong></td>
+                <td><strong>imm</strong></td>
+            </tr>
+            <tr>
+                <td>001000</td>
+                <td>10001</td>
+                <td>10000</td>
+                <td>0000000000000101</td>
+            </tr>
+            <tr style="font-size: 0.9em;">
+                <td>(addi=8)</td>
+                <td>($s1=17)</td>
+                <td>($s0=16)</td>
+                <td>(5)</td>
+            </tr>
+        </table>
+        <p style="margin-top: 10px;"><strong>Binario completo:</strong></p>
+        <code>00100010001100000000000000000101</code>
+    </div>
+    
+    <div class="comparison-table">
+        <h4>Instrucciones I-Type Comunes:</h4>
+        <table style="width: 100%">
+            <tr>
+                <th>Instrucción</th>
+                <th>op (decimal)</th>
+                <th>Descripción</th>
+            </tr>
+            <tr>
+                <td>addi</td>
+                <td>8</td>
+                <td>Suma inmediata</td>
+            </tr>
+            <tr>
+                <td>andi</td>
+                <td>12</td>
+                <td>AND inmediato</td>
+            </tr>
+            <tr>
+                <td>ori</td>
+                <td>13</td>
+                <td>OR inmediato</td>
+            </tr>
+            <tr>
+                <td>lw</td>
+                <td>35</td>
+                <td>Cargar palabra</td>
+            </tr>
+            <tr>
+                <td>sw</td>
+                <td>43</td>
+                <td>Guardar palabra</td>
+            </tr>
+            <tr>
+                <td>beq</td>
+                <td>4</td>
+                <td>Branch if equal</td>
+            </tr>
+            <tr>
+                <td>bne</td>
+                <td>5</td>
+                <td>Branch if not equal</td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="warning-box">
+        <h4>⚠️ ¡Atención al Orden!</h4>
+        <p>En assembly: <code>addi rt, rs, imm</code></p>
+        <p>En machine: campos son <code>op | rs | rt | imm</code></p>
+        <p>Para lw/sw: <code>lw rt, imm(rs)</code> → se codifica como <code>op | rs | rt | imm</code></p>
+    </div>
+    
+    <h3>Ejercicio Resuelto</h3>
+    
+    <div class="quiz-question">
+        <h4>🎯 Traducir: lw $s3, -24($s4)</h4>
+        <p><strong>Datos:</strong> $s3 = registro 19, $s4 = registro 20, lw = opcode 35</p>
+        
+        <div class="code-box">
+            <code># Paso 1: Identificar los campos
+op  = 35 (lw) = 100011 en binario
+rs  = 20 ($s4) = 10100 en binario
+rt  = 19 ($s3) = 10011 en binario
+imm = -24 = 1111111111101000 en complemento a 2 (16 bits)
+
+# Paso 2: Ensamblar
+┌────────┬───────┬───────┬──────────────────┐
+│ 100011 │ 10100 │ 10011 │ 1111111111101000 │
+└────────┴───────┴───────┴──────────────────┘
+
+# Binario completo:
+10001110100100111111111111101000
+
+# Hexadecimal:
+0x8E93FFE8</code>
+        </div>
+    </div>
+    
+    <h3>Formato J-Type (Jump)</h3>
+    
+    <div class="code-box">
+        <code>┌──────┬──────────────────────────────┐
+│  op  │            addr              │
+│ 6bit │           26bit              │
+└──────┴──────────────────────────────┘
+
+op   = código de operación (2 para j, 3 para jal)
+addr = dirección de 26 bits (dirección / 4)</code>
+    </div>
+    
+    <div class="principle-box">
+        <h4>📌 Ejemplo: j 0x00400020</h4>
+        <p>Dirección palabra = 0x00400020 / 4 = 0x00100008</p>
+        <table style="width: 100%; color: white; margin-top: 10px;">
+            <tr>
+                <td><strong>op</strong></td>
+                <td><strong>addr</strong></td>
+            </tr>
+            <tr>
+                <td>000010</td>
+                <td>00000000010000000000001000</td>
+            </tr>
+            <tr style="font-size: 0.9em;">
+                <td>(j=2)</td>
+                <td>(0x100008)</td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="info-box">
+        <h4>📝 Resumen de Formatos</h4>
+        <ul style="margin-left: 20px;">
+            <li><strong>R-Type:</strong> add, sub, and, or, slt, sll, srl, etc.</li>
+            <li><strong>I-Type:</strong> addi, lw, sw, beq, bne, andi, ori, etc.</li>
+            <li><strong>J-Type:</strong> j, jal</li>
+        </ul>
+    </div>
+</div>
+<!-- CONTROL DE FLUJO -->
+<div id="control" class="section">
+    <h2>🔀 Control de Flujo</h2>
+    
+    <div class="info-box">
+        <h4>🎯 ¿Qué es el Control de Flujo?</h4>
+        <p>Permite ejecutar instrucciones fuera de secuencia:</p>
+        <ul style="margin-left: 20px;">
+            <li>✅ Tomar decisiones (if/else)</li>
+            <li>✅ Repetir código (loops)</li>
+            <li>✅ Llamar funciones</li>
+        </ul>
+    </div>
+    
+    <h3>Program Counter (PC)</h3>
+    
+    <div class="principle-box">
+        <h4>📍 Concepto Clave</h4>
+        <p><strong>PC (Program Counter):</strong> Registro especial que mantiene la dirección de la instrucción actual</p>
+        <ul style="margin-left: 20px; margin-top: 10px;">
+            <li>Normalmente: PC = PC + 4 (siguiente instrucción)</li>
+            <li>Con branches/jumps: PC cambia a otra dirección</li>
+        </ul>
+    </div>
+    
+    <h3>Instrucciones de Branch (Condicionales)</h3>
+    
+    <div class="comparison-table">
+        <table style="width: 100%">
+            <tr>
+                <th>Instrucción</th>
+                <th>Significado</th>
+                <th>Condición</th>
+            </tr>
+            <tr>
+                <td><code>beq $s0, $s1, label</code></td>
+                <td>Branch if Equal</td>
+                <td>Si $s0 == $s1, salta a label</td>
+            </tr>
+            <tr>
+                <td><code>bne $s0, $s1, label</code></td>
+                <td>Branch if Not Equal</td>
+                <td>Si $s0 != $s1, salta a label</td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="code-box">
+        <code># Ejemplo de beq
+addi $s0, $0, 4      # $s0 = 4
+addi $s1, $0, 1      # $s1 = 1
+sll  $s1, $s1, 2     # $s1 = 1 &lt;&lt; 2 = 4
+beq  $s0, $s1, target # branch es tomado (4 == 4)
+addi $s1, $s1, 1     # NO se ejecuta
+sub  $s1, $s1, $s0   # NO se ejecuta
+target:
+add  $s1, $s1, $s0   # $s1 = 4 + 4 = 8</code>
+    </div>
+    
+    <h3>Set Less Than (slt)</h3>
+    
+    <div class="principle-box">
+        <h4>🔍 Comparación Menor Que</h4>
+        <p><code>slt $t0, $s0, $s1</code></p>
+        <p>Si $s0 &lt; $s1 → $t0 = 1</p>
+        <p>Si $s0 &gt;= $s1 → $t0 = 0</p>
+    </div>
+    
+    <div class="code-box">
+        <code># Comparar si i &lt; 100
+slt $t0, $s0, $t1    # $t0 = 1 si $s0 &lt; $t1
+beq $t0, $0, done    # si $t0 == 0, salta a done
+# código si i &lt; 100
+done:</code>
+    </div>
+    
+    <h3>Instrucciones de Jump (Incondicionales)</h3>
+    
+    <div class="comparison-table">
+        <table style="width: 100%">
+            <tr>
+                <th>Instrucción</th>
+                <th>Descripción</th>
+                <th>Uso</th>
+            </tr>
+            <tr>
+                <td><code>j label</code></td>
+                <td>Jump</td>
+                <td>Salta a label (siempre)</td>
+            </tr>
+            <tr>
+                <td><code>jr $ra</code></td>
+                <td>Jump Register</td>
+                <td>Salta a dirección en registro</td>
+            </tr>
+            <tr>
+                <td><code>jal label</code></td>
+                <td>Jump and Link</td>
+                <td>Llama a función en label</td>
+            </tr>
+        </table>
+    </div>
+    
+    <h3>Estructuras de Control en C → MIPS</h3>
+    
+    <h4>1️⃣ IF Statement</h4>
+    
+    <div class="code-box">
+        <code>// C Code
+if (i == j)
+    f = g + h;
+f = f - i;
+
+// MIPS Assembly
+# $s3=i, $s4=j, $s0=f, $s1=g, $s2=h
+bne  $s3, $s4, L1    # si i != j, salta a L1
+add  $s0, $s1, $s2   # f = g + h
+L1:
+sub  $s0, $s0, $s3   # f = f - i</code>
+    </div>
+    
+    <div class="warning-box">
+        <h4>⚠️ Nota Importante</h4>
+        <p>En assembly probamos la <strong>condición opuesta</strong> a la del código C</p>
+        <p>C dice: "if (i == j)" → Assembly prueba: "if (i != j) skip"</p>
+    </div>
+    
+    <h4>2️⃣ IF/ELSE Statement</h4>
+    
+    <div class="code-box">
+        <code>// C Code
+if (i == j)
+    f = g + h;
+else
+    f = f - i;
+
+// MIPS Assembly
+bne  $s3, $s4, L1    # si i != j, ir a else
+add  $s0, $s1, $s2   # f = g + h (then)
+j    done            # saltar el else
+L1:
+sub  $s0, $s0, $s3   # f = f - i (else)
+done:</code>
+    </div>
+    
+    <h4>3️⃣ WHILE Loop</h4>
+    
+    <div class="code-box">
+        <code>// C Code: calcular 2^x = 128
+int pow = 1;
+int x = 0;
+while (pow != 128) {
+    pow = pow * 2;
+    x = x + 1;
+}
+
+// MIPS Assembly
+# $s0=pow, $s1=x
+addi $s0, $0, 1       # pow = 1
+add  $s1, $0, $0      # x = 0
+addi $t0, $0, 128     # $t0 = 128
+while:
+beq  $s0, $t0, done   # si pow == 128, terminar
+sll  $s0, $s0, 1      # pow = pow * 2
+addi $s1, $s1, 1      # x = x + 1
+j    while            # repetir
+done:</code>
+    </div>
+    
+    <h4>4️⃣ FOR Loop</h4>
+    
+    <div class="code-box">
+        <code>// C Code: sumar números 0 a 9
+int sum = 0;
+for (int i = 0; i != 10; i++) {
+    sum = sum + i;
+}
+
+// MIPS Assembly
+# $s0=i, $s1=sum
+addi $s1, $0, 0       # sum = 0
+add  $s0, $0, $0      # i = 0
+addi $t0, $0, 10      # $t0 = 10
+for:
+beq  $s0, $t0, done   # si i == 10, terminar
+add  $s1, $s1, $s0    # sum = sum + i
+addi $s0, $s0, 1      # i++
+j    for              # repetir
+done:</code>
+    </div>
+    
+    <h3>Ejemplo Completo: FOR con SLT</h3>
+    
+    <div class="code-box">
+        <code>// C: sumar potencias de 2 desde 1 hasta 100
+int sum = 0;
+for (int i = 1; i &lt; 101; i = i * 2) {
+    sum = sum + i;
+}
+
+// MIPS
+# $s0=i, $s1=sum
+addi $s1, $0, 0       # sum = 0
+addi $s0, $0, 1       # i = 1
+addi $t0, $0, 101     # $t0 = 101
+loop:
+slt  $t1, $s0, $t0    # $t1 = 1 si i &lt; 101
+beq  $t1, $0, done    # si i &gt;= 101, terminar
+add  $s1, $s1, $s0    # sum = sum + i
+sll  $s0, $s0, 1      # i = i * 2
+j    loop
+done:</code>
+    </div>
+    
+    <h3>Arrays en MIPS</h3>
+    
+    <div class="info-box">
+        <h4>📊 Trabajando con Arrays</h4>
+        <p>Los arrays se almacenan en memoria consecutiva</p>
+        <ul style="margin-left: 20px;">
+            <li>Cada elemento entero (int) ocupa 4 bytes</li>
+            <li>array[0] está en dirección base</li>
+            <li>array[1] está en dirección base + 4</li>
+            <li>array[i] está en dirección base + (i × 4)</li>
+        </ul>
+    </div>
+    
+    <div class="code-box">
+        <code>// C Code: duplicar array[0] y array[1]
+int array[5];
+array[0] = array[0] * 2;
+array[1] = array[1] * 2;
+
+// MIPS (base = 0x12348000)
+# $s0 = dirección base del array
+lui  $s0, 0x1234      # parte alta
+ori  $s0, $s0, 0x8000 # parte baja: $s0 = 0x12348000
+
+# array[0] = array[0] * 2
+lw   $t1, 0($s0)      # $t1 = array[0]
+sll  $t1, $t1, 1      # $t1 = $t1 * 2
+sw   $t1, 0($s0)      # array[0] = $t1
+
+# array[1] = array[1] * 2
+lw   $t1, 4($s0)      # $t1 = array[1]
+sll  $t1, $t1, 1      # $t1 = $t1 * 2
+sw   $t1, 4($s0)      # array[1] = $t1</code>
+    </div>
+    
+    <h3>Array con FOR Loop</h3>
+    
+    <div class="code-box">
+        <code>// C: multiplicar por 8 cada elemento
+int array[1000];
+for (int i = 0; i &lt; 1000; i++) {
+    array[i] = array[i] * 8;
+}
+
+// MIPS
+# $s0=base, $s1=i
+lui  $s0, 0x23B8
+ori  $s0, $s0, 0xF000 # base = 0x23B8F000
+addi $s1, $0, 0       # i = 0
+addi $t2, $0, 1000    # límite
+loop:
+slt  $t0, $s1, $t2    # i &lt; 1000?
+beq  $t0, $0, done
+sll  $t0, $s1, 2      # $t0 = i * 4 (offset en bytes)
+add  $t0, $t0, $s0    # dirección de array[i]
+lw   $t1, 0($t0)      # cargar array[i]
+sll  $t1, $t1, 3      # array[i] * 8
+sw   $t1, 0($t0)      # guardar
+addi $s1, $s1, 1      # i++
+j    loop
+done:</code>
+    </div>
+</div>
+
+<!-- FUNCIONES -->
+<div id="functions" class="section">
+    <h2>📞 Funciones en MIPS</h2>
+    
+    <div class="info-box">
+        <h4>🎯 Conceptos Básicos</h4>
+        <p><strong>Caller (Llamador):</strong> La función que llama a otra</p>
+        <p><strong>Callee (Llamada):</strong> La función que es llamada</p>
+        <p><strong>Convención:</strong> Reglas que ambas deben seguir</p>
+    </div>
+    
+    <h3>Convenciones de MIPS</h3>
+    
+    <div class="principle-box">
+        <h4>📋 Registros para Funciones</h4>
+        <ul style="margin-left: 20px;">
+            <li><strong>$a0-$a3:</strong> Argumentos de entrada (máximo 4)</li>
+            <li><strong>$v0-$v1:</strong> Valores de retorno</li>
+            <li><strong>$ra:</strong> Dirección de retorno</li>
+            <li><strong>$sp:</strong> Stack pointer (puntero de pila)</li>
+        </ul>
+    </div>
+    
+    <h3>Jump and Link (jal)</h3>
+    
+    <div class="code-box">
+        <code># jal hace dos cosas:
+# 1. $ra = PC + 4 (guarda dirección de retorno)
+# 2. PC = dirección de la función (salta)
+
+0x00400200  main: jal simple  # llama a simple
+0x00400204        add $s0, $s1, $s2
+...
+0x00401020  simple: jr $ra    # retorna
+
+# Cuando se ejecuta jal:
+# $ra = 0x00400204 (siguiente instrucción)
+# PC = 0x00401020 (inicio de simple)
+
+# Cuando se ejecuta jr $ra:
+# PC = $ra = 0x00400204 (vuelve)</code>
+    </div>
+    
+    <h3>Ejemplo Simple: Sin Argumentos ni Retorno</h3>
+    
+    <div class="code-box">
+        <code>// C Code
+int main() {
+    simple();
+    a = b + c;
+}
+void simple() {
+    return;
+}
+
+// MIPS
+main:
+    jal simple         # llama a simple
+    add $s0, $s1, $s2  # a = b + c
+    ...
+
+simple:
+    jr $ra             # retorna</code>
+    </div>
+    
+    <h3>Ejemplo: Con Argumentos y Retorno</h3>
+    
+    <div class="code-box">
+        <code>// C Code
+int main() {
+    int y;
+    y = diffofsums(2, 3, 4, 5);
+    ...
+}
+
+int diffofsums(int f, int g, int h, int i) {
+    int result;
+    result = (f + g) - (h + i);
+    return result;
+}
+
+// MIPS
+# $s0 = y
+main:
+    addi $a0, $0, 2    # argumento 0 = 2
+    addi $a1, $0, 3    # argumento 1 = 3
+    addi $a2, $0, 4    # argumento 2 = 4
+    addi $a3, $0, 5    # argumento 3 = 5
+    jal  diffofsums    # llamar función
+    add  $s0, $v0, $0  # y = valor retornado
+    ...
+
+diffofsums:
+    add  $t0, $a0, $a1 # $t0 = f + g
+    add  $t1, $a2, $a3 # $t1 = h + i
+    sub  $s0, $t0, $t1 # result = (f+g)-(h+i)
+    add  $v0, $s0, $0  # poner resultado en $v0
+    jr   $ra           # retornar</code>
+    </div>
+    
+    <div class="warning-box">
+        <h4>⚠️ Problema: Sobrescribir Registros</h4>
+        <p>La función diffofsums sobrescribe $t0, $t1, $s0</p>
+        <p>¿Qué pasa si el caller los necesitaba?</p>
+        <p><strong>Solución:</strong> Usar la PILA (Stack)</p>
+    </div>
+    
+    <h3>La Pila (Stack)</h3>
+    
+    <div class="principle-box">
+        <h4>📚 ¿Qué es la Pila?</h4>
+        <ul style="margin-left: 20px;">
+            <li>Memoria especial para datos temporales</li>
+            <li>LIFO: Last In, First Out (último en entrar, primero en salir)</li>
+            <li>Crece "hacia abajo" (direcciones menores)</li>
+            <li>$sp apunta al tope de la pila</li>
+        </ul>
+    </div>
+    
+    <div class="memory-diagram">
+        <h4>Operaciones en la Pila:</h4>
+        <div class="code-box">
+            <code># PUSH: Guardar un registro en la pila
+addi $sp, $sp, -4    # hacer espacio (4 bytes)
+sw   $s0, 0($sp)     # guardar $s0
+
+# POP: Recuperar un registro de la pila
+lw   $s0, 0($sp)     # cargar $s0
+addi $sp, $sp, 4     # liberar espacio</code>
+        </div>
+    </div>
+    
+    <h3>Función Usando la Pila</h3>
+    
+    <div class="code-box">
+        <code># Versión mejorada de diffofsums
+diffofsums:
+    # Prólogo: guardar registros
+    addi $sp, $sp, -4     # espacio para 1 registro
+    sw   $s0, 0($sp)      # guardar $s0
+    
+    # Cuerpo de la función
+    add  $t0, $a0, $a1    # $t0 = f + g
+    add  $t1, $a2, $a3    # $t1 = h + i
+    sub  $s0, $t0, $t1    # result = (f+g)-(h+i)
+    add  $v0, $s0, $0     # retornar resultado
+    
+    # Epílogo: restaurar registros
+    lw   $s0, 0($sp)      # restaurar $s0
+    addi $sp, $sp, 4      # liberar espacio
+    jr   $ra              # retornar</code>
+    </div>
+    
+    <div class="info-box">
+        <h4>📝 Regla: ¿Qué Guardar?</h4>
+        <p><strong>Registros Saved ($s0-$s7):</strong> La función DEBE guardarlos si los usa</p>
+        <p><strong>Registros Temp ($t0-$t9):</strong> NO es necesario guardarlos</p>
+        <p><strong>$ra:</strong> Guardar solo si la función llama a otras funciones</p>
+    </div>
+    
+    <h3>Llamadas Anidadas</h3>
+    
+    <div class="code-box">
+        <code># Si una función llama a otra, debe guardar $ra
+proc1:
+    addi $sp, $sp, -4    # espacio para $ra
+    sw   $ra, 0($sp)     # guardar $ra
+    
+    jal  proc2           # llamar a proc2 (esto cambia $ra!)
+    
+    # ... más código ...
+    
+    lw   $ra, 0($sp)     # restaurar $ra original
+    addi $sp, $sp, 4     # liberar espacio
+    jr   $ra             # retornar al caller original</code>
+    </div>
+    
+    <h3>Recursión: Factorial</h3>
+    
+    <div class="code-box">
+        <code>// C Code
+int factorial(int n) {
+    if (n &lt;= 1)
+        return 1;
+    else
+        return n * factorial(n-1);
+}
+
+// MIPS
+factorial:
+    addi $sp, $sp, -8     # espacio para 2 registros
+    sw   $a0, 4($sp)      # guardar n
+    sw   $ra, 0($sp)      # guardar $ra
+    
+    addi $t0, $0, 2
+    slt  $t0, $a0, $t0    # n &lt;= 1?
+    beq  $t0, $0, else    # no: ir a else
+    
+    # caso base: n &lt;= 1
+    addi $v0, $0, 1       # return 1
+    addi $sp, $sp, 8      # limpiar pila
+    jr   $ra              # retornar
+    
+else:
+    # caso recursivo: n &gt; 1
+    addi $a0, $a0, -1     # n = n - 1
+    jal  factorial        # llamada recursiva
+    
+    lw   $ra, 0($sp)      # restaurar $ra
+    lw   $a0, 4($sp)      # restaurar n
+    addi $sp, $sp, 8      # limpiar pila
+    
+    mul  $v0, $a0, $v0    # n * factorial(n-1)
+    jr   $ra              # retornar</code>
+    </div>
+    
+    <h3>Resumen de Convenciones</h3>
+    
+    <div class="comparison-table">
+        <table style="width: 100%">
+            <tr>
+                <th>Caller (Llamador)</th>
+                <th>Callee (Llamada)</th>
+            </tr>
+            <tr>
+                <td>
+                    1. Poner argumentos en $a0-$a3<br>
+                    2. Guardar registros temporales si es necesario<br>
+                    3. jal función<br>
+                    4. Restaurar registros<br>
+                    5. Leer resultado de $v0
+                </td>
+                <td>
+                    1. Guardar registros $s0-$s7 que use<br>
+                    2. Guardar $ra si llama a otras funciones<br>
+                    3. Ejecutar la función<br>
+                    4. Poner resultado en $v0<br>
+                    5. Restaurar registros<br>
+                    6. jr $ra
+                </td>
+            </tr>
+        </table>
+    </div>
+</div> 
+
+<!-- QUIZ FINAL -->
+<div id="quiz" class="section">
+    <h2>🎓 Quiz Final: Evaluación Completa</h2>
+    
+    <div class="quiz-section">
+        <h3>📝 Sección A: Preguntas de Alternativas</h3>
+        
+        <!-- Pregunta 1 -->
+        <div class="quiz-question">
+            <h4>1. ¿Cuál es el valor del registro $0 en MIPS?</h4>
+            <div class="quiz-options">
+                <label><input type="radio" name="q1" value="a"> a) Puede cambiar según el programa</label>
+                <label><input type="radio" name="q1" value="b"> b) Siempre es 0 (constante)</label>
+                <label><input type="radio" name="q1" value="c"> c) Es 1 por defecto</label>
+                <label><input type="radio" name="q1" value="d"> d) No se puede usar</label>
+            </div>
+            <button class="check-answer" onclick="checkAnswer('q1', 'b', this)">Verificar Respuesta</button>
+            <div class="answer-feedback"></div>
+        </div>
+        
+        <!-- Pregunta 2 -->
+        <div class="quiz-question">
+            <h4>2. ¿Cuántos bits tiene cada instrucción MIPS?</h4>
+            <div class="quiz-options">
+                <label><input type="radio" name="q2" value="a"> a) 16 bits</label>
+                <label><input type="radio" name="q2" value="b"> b) 24 bits</label>
+                <label><input type="radio" name="q2" value="c"> c) 32 bits</label>
+                <label><input type="radio" name="q2" value="d"> d) 64 bits</label>
+            </div>
+            <button class="check-answer" onclick="checkAnswer('q2', 'c', this)">Verificar Respuesta</button>
+            <div class="answer-feedback"></div>
+        </div>
+        
+        <!-- Pregunta 3 -->
+        <div class="quiz-question">
+            <h4>3. En la instrucción <code>lw $t0, 8($s0)</code>, ¿cuál es la dirección efectiva?</h4>
+            <div class="quiz-options">
+                <label><input type="radio" name="q3" value="a"> a) 8</label>
+                <label><input type="radio" name="q3" value="b"> b) $s0</label>
+                <label><input type="radio" name="q3" value="c"> c) $s0 + 8</label>
+                <label><input type="radio" name="q3" value="d"> d) $t0 + 8</label>
+            </div>
+            <button class="check-answer" onclick="checkAnswer('q3', 'c', this)">Verificar Respuesta</button>
+            <div class="answer-feedback"></div>
+        </div>
+        
+        <!-- Pregunta 4 -->
+        <div class="quiz-question">
+            <h4>4. ¿Qué tipo de instrucción es <code>add $t0, $s1, $s2</code>?</h4>
+            <div class="quiz-options">
+                <label><input type="radio" name="q4" value="a"> a) I-Type</label>
+                <label><input type="radio" name="q4" value="b"> b) R-Type</label>
+                <label><input type="radio" name="q4" value="c"> c) J-Type</label>
+                <label><input type="radio" name="q4" value="d"> d) S-Type</label>
+            </div>
+            <button class="check-answer" onclick="checkAnswer('q4', 'b', this)">Verificar Respuesta</button>
+            <div class="answer-feedback"></div>
+        </div>
+        
+        <!-- Pregunta 5 -->
+        <div class="quiz-question">
+            <h4>5. ¿Cuál principio de diseño justifica que MIPS tenga solo 32 registros?</h4>
+            <div class="quiz-options">
+                <label><input type="radio" name="q5" value="a"> a) Simplicidad favorece la regularidad</label>
+                <label><input type="radio" name="q5" value="b"> b) Hacer el caso común rápido</label>
+                <label><input type="radio" name="q5" value="c"> c) Más pequeño es más rápido</label>
+                <label><input type="radio" name="q5" value="d"> d) Buenos compromisos</label>
+            </div>
+            <button class="check-answer" onclick="checkAnswer('q5', 'c', this)">Verificar Respuesta</button>
+            <div class="answer-feedback"></div>
+        </div>
+        
+        <!-- Pregunta 6 -->
+        <div class="quiz-question">
+            <h4>6. ¿Qué hace la instrucción <code>jal función</code>?</h4>
+            <div class="quiz-options">
+                <label><input type="radio" name="q6" value="a"> a) Solo salta a función</label>
+                <label><input type="radio" name="q6" value="b"> b) Guarda PC+4 en $ra y salta a función</label>
+                <label><input type="radio" name="q6" value="c"> c) Retorna de la función</label>
+                <label><input type="radio" name="q6" value="d"> d) Guarda $sp y salta</label>
+            </div>
+            <button class="check-answer" onclick="checkAnswer('q6', 'b', this)">Verificar Respuesta</button>
+            <div class="answer-feedback"></div>
+        </div>
+        
+        <!-- Pregunta 7 -->
+        <div class="quiz-question">
+            <h4>7. Si $t0 = 8, ¿cuál es el resultado de <code>sll $t1, $t0, 2</code>?</h4>
+            <div class="quiz-options">
+                <label><input type="radio" name="q7" value="a"> a) $t1 = 2</label>
+                <label><input type="radio" name="q7" value="b"> b) $t1 = 10</label>
+                <label><input type="radio" name="q7" value="c"> c) $t1 = 16</label>
+                <label><input type="radio" name="q7" value="d"> d) $t1 = 32</label>
+            </div>
+            <button class="check-answer" onclick="checkAnswer('q7', 'd', this)">Verificar Respuesta</button>
+            <div class="answer-feedback"></div>
+        </div>
+        
+        <!-- Pregunta 8 -->
+        <div class="quiz-question">
+            <h4>8. ¿Qué registros se usan para pasar argumentos a funciones?</h4>
+            <div class="quiz-options">
+                <label><input type="radio" name="q8" value="a"> a) $s0-$s3</label>
+                <label><input type="radio" name="q8" value="b"> b) $t0-$t3</label>
+                <label><input type="radio" name="q8" value="c"> c) $a0-$a3</label>
+                <label><input type="radio" name="q8" value="d"> d) $v0-$v3</label>
+            </div>
+            <button class="check-answer" onclick="checkAnswer('q8', 'c', this)">Verificar Respuesta</button>
+            <div class="answer-feedback"></div>
+        </div>
+        
+        <!-- Pregunta 9 -->
+        <div class="quiz-question">
+            <h4>9. En un sistema Big-Endian, ¿dónde se almacena el byte más significativo?</h4>
+            <div class="quiz-options">
+                <label><input type="radio" name="q9" value="a"> a) En la dirección más baja</label>
+                <label><input type="radio" name="q9" value="b"> b) En la dirección más alta</label>
+                <label><input type="radio" name="q9" value="c"> c) En el centro</label>
+                <label><input type="radio" name="q9" value="d"> d) No importa</label>
+            </div>
+            <button class="check-answer" onclick="checkAnswer('q9', 'a', this)">Verificar Respuesta</button>
+            <div class="answer-feedback"></div>
+        </div>
+        
+        <!-- Pregunta 10 -->
+        <div class="quiz-question">
+            <h4>10. ¿Cuál es la diferencia entre RISC y CISC?</h4>
+            <div class="quiz-options">
+                <label><input type="radio" name="q10" value="a"> a) RISC tiene más instrucciones complejas</label>
+                <label><input type="radio" name="q10" value="b"> b) CISC es más rápido siempre</label>
+                <label><input type="radio" name="q10" value="c"> c) RISC tiene instrucciones simples, CISC tiene instrucciones complejas</label>
+                <label><input type="radio" name="q10" value="d"> d) No hay diferencia</label>
+            </div>
+            <button class="check-answer" onclick="checkAnswer('q10', 'c', this)">Verificar Respuesta</button>
+            <div class="answer-feedback"></div>
+        </div>
+    </div>
+    
+    <div class="quiz-section" style="margin-top: 40px;">
+        <h3>✍️ Sección B: Preguntas de Desarrollo</h3>
+        
+        <div class="quiz-question">
+            <h4>1. Traduce el siguiente código C a MIPS Assembly:</h4>
+            <div class="code-box">
+                <code>int a, b, c, d;
+a = b + c;
+d = a - b;</code>
+            </div>
+            <div class="info-box" style="margin-top: 15px;">
+                <strong>Respuesta Esperada:</strong>
+                <div class="code-box">
+                    <code># Asumiendo: $s0=a, $s1=b, $s2=c, $s3=d
+add $s0, $s1, $s2    # a = b + c
+sub $s3, $s0, $s1    # d = a - b</code>
+                </div>
+            </div>
+        </div>
+        
+        <div class="quiz-question">
+            <h4>2. ¿Qué valor tendrá $s1 después de ejecutar este código?</h4>
+            <div class="code-box">
+                <code>addi $s0, $0, 10
+addi $s1, $0, 5
+slt  $t0, $s1, $s0
+beq  $t0, $0, skip
+addi $s1, $s1, 3
+skip:
+addi $s1, $s1, 2</code>
+            </div>
+            <div class="info-box" style="margin-top: 15px;">
+                <strong>Respuesta y Explicación:</strong>
+                <p>$s1 = <strong>10</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li>$s0 = 10, $s1 = 5</li>
+                    <li>slt: $t0 = 1 (porque 5 &lt; 10)</li>
+                    <li>beq: NO salta (porque $t0 != 0)</li>
+                    <li>$s1 = 5 + 3 = 8</li>
+                    <li>$s1 = 8 + 2 = 10</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="quiz-question">
+            <h4>3. Traduce esta instrucción a código máquina: <code>add $t0, $s1, $s2</code></h4>
+            <div class="info-box" style="margin-top: 15px;">
+                <strong>Solución Paso a Paso:</strong>
+                <p>Tipo: R-Type (op=0, funct=32 para add)</p>
+                <p>Registros: $t0=8, $s1=17, $s2=18</p>
+                <div class="code-box">
+                    <code>op    rs    rt    rd    shamt funct
+000000 10001 10010 01000 00000 100000
+
+Binario: 00000010001100100100000000100000
+Hexadecimal: 0x02324020</code>
+                </div>
+            </div>
+        </div>
+        
+        <div class="quiz-question">
+            <h4>4. Escribe una función MIPS que sume dos números y retorne el resultado:</h4>
+            <div class="code-box">
+                <code>// C Code
+int suma(int a, int b) {
+    return a + b;
+}</code>
+            </div>
+            <div class="info-box" style="margin-top: 15px;">
+                <strong>Respuesta:</strong>
+                <div class="code-box">
+                    <code>suma:
+    add $v0, $a0, $a1    # $v0 = $a0 + $a1
+    jr  $ra              # retornar
+
+# Llamada desde main:
+main:
+    addi $a0, $0, 5      # primer argumento
+    addi $a1, $0, 3      # segundo argumento
+    jal  suma            # llamar función
+    # resultado en $v0 (será 8)</code>
+                </div>
+            </div>
+        </div>
+        
+        <div class="quiz-question">
+            <h4>5. Explica la diferencia entre registros Saved ($s) y Temporary ($t):</h4>
+            <div class="info-box" style="margin-top: 15px;">
+                <strong>Respuesta Completa:</strong>
+                <p><strong>Registros Saved ($s0-$s7):</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>✅ Se PRESERVAN entre llamadas a funciones</li>
+                    <li>✅ Si una función los usa, DEBE guardarlos en la pila y restaurarlos</li>
+                    <li>✅ Útiles para variables importantes del programa</li>
+                </ul>
+                <p><strong>Registros Temporary ($t0-$t9):</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>✅ NO se preservan entre llamadas</li>
+                    <li>✅ Las funciones pueden sobrescribirlos libremente</li>
+                    <li>✅ Útiles para cálculos intermedios temporales</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="quiz-question">
+            </div>
+            <div class="code-box">
+                <code>// Sumar números del 1 al 5
+int sum = 0;
+for (int i = 1; i &lt;= 5; i++) {
+    sum = sum + i;
+}</code>
+            </div>
+            <div class="info-box" style="margin-top: 15px;">
+                <strong>Respuesta:</strong>
+                <div class="code-box">
+                    <code># $s0=sum, $s1=i
+addi $s0, $0, 0       # sum = 0
+addi $s1, $0, 1       # i = 1
+addi $t0, $0, 6       # límite = 6 (porque i &lt;= 5)
+for:
+    slt  $t1, $s1, $t0    # i &lt; 6?
+    beq  $t1, $0, done    # si no, terminar
+    add  $s0, $s0, $s1    # sum = sum + i
+    addi $s1, $s1, 1      # i++
+    j    for              # repetir
+done:
+# sum tendrá 15 (1+2+3+4+5)</code>
+                </div>
+            </div>
+        </div>
+        
+        <div class="quiz-question">
+            <h4>7. ¿Qué hace este código y cuál es el resultado final?</h4>
+            <div class="code-box">
+                <code>addi $s0, $0, 0xF0
+andi $s1, $s0, 0x0F</code>
+            </div>
+            <div class="info-box" style="margin-top: 15px;">
+                <strong>Explicación:</strong>
+                <p>Este código realiza un <strong>enmascaramiento de bits</strong>:</p>
+                <div class="code-box">
+                    <code>$s0 = 0x000000F0 (binario: ...11110000)
+$s1 = $s0 AND 0x0F
+    = 0x000000F0 AND 0x0000000F
+    = 0x00000000
+
+Resultado: $s1 = 0</code>
+                </div>
+                <p>El AND con 0x0F extrae solo los 4 bits menos significativos. Como en $s0 esos bits son 0, el resultado es 0.</p>
+            </div>
+        </div>
+        
+        <div class="quiz-question">
+            <h4>8. Escribe el código completo para acceder a array[5] donde la base es 0x10000000:</h4>
+            <div class="info-box" style="margin-top: 15px;">
+                <strong>Respuesta:</strong>
+                <div class="code-box">
+                    <code># Cargar dirección base
+lui  $s0, 0x1000      # parte alta: 0x10000000
+ori  $s0, $s0, 0x0000 # parte baja (opcional en este caso)
+
+# Acceder a array[5]
+# Offset = 5 * 4 = 20 bytes
+lw   $t0, 20($s0)     # $t0 = array[5]
+
+# O de forma más genérica con i=5:
+addi $t1, $0, 5       # i = 5
+sll  $t1, $t1, 2      # i * 4 = 20
+add  $t2, $s0, $t1    # dirección = base + offset
+lw   $t0, 0($t2)      # cargar array[i]</code>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="quiz-section" style="margin-top: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+        <h3 style="color: white;">🎯 Consejos Finales para el Examen</h3>
+        <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; margin: 20px 0;">
+            <h4>📚 Temas Clave a Dominar:</h4>
+            <ol style="margin-left: 20px; line-height: 2;">
+                <li><strong>Los 4 Principios de Diseño</strong> y cómo se aplican</li>
+                <li><strong>Formato de instrucciones</strong> (R, I, J) y cómo codificarlas</li>
+                <li><strong>Convenciones de registros</strong> ($a, $v, $s, $t, $ra, $sp)</li>
+                <li><strong>Direccionamiento de memoria</strong> (byte-addressable, offset)</li>
+                <li><strong>Control de flujo</strong> (if, loops, funciones)</li>
+                <li><strong>La pila</strong> y cuándo guardar/restaurar registros</li>
+                <li><strong>Traducción C → Assembly → Máquina</strong></li>
+            </ol>
+        </div>
+        
+        <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; margin: 20px 0;">
+            <h4>💡 Trucos para Recordar:</h4>
+            <ul style="margin-left: 20px; line-height: 2;">
+                <li>🔹 <strong>$0 siempre es 0</strong> - úsalo para inicializar</li>
+                <li>🔹 <strong>Palabras = 4 bytes</strong> - las direcciones van de 4 en 4</li>
+                <li>🔹 <strong>sll por 2 = multiplicar por 4</strong> - útil para arrays</li>
+                <li>🔹 <strong>Assembly prueba lo opuesto</strong> - if (a==b) → bne a,b,skip</li>
+                <li>🔹 <strong>jal guarda PC+4 en $ra</strong> - siempre retorna con jr $ra</li>
+                <li>🔹 <strong>Pila crece hacia abajo</strong> - push: sp-=4, pop: sp+=4</li>
+            </ul>
+        </div>
+        
+        <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+            <h4>⚡ Errores Comunes a Evitar:</h4>
+            <ul style="margin-left: 20px; line-height: 2;">
+                <li>❌ Olvidar multiplicar por 4 para direcciones de palabras</li>
+                <li>❌ Confundir el orden destino-fuente en instrucciones</li>
+                <li>❌ No guardar $ra antes de jal en funciones anidadas</li>
+                <li>❌ No restaurar registros $s después de usarlos</li>
+                <li>❌ Confundir beq/bne y las condiciones</li>
+                <li>❌ Olvidar el jr $ra al final de funciones</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div style="text-align: center; padding: 40px; background: #f8f9fa; border-radius: 10px; margin-top: 30px;">
+        <h2 style="color: #2c3e50;">🎉 ¡Éxito en tu Examen!</h2>
+        <p style="font-size: 1.2em; color: #34495e; margin: 20px 0;">
+            Has completado el resumen de Lenguaje Ensamblador MIPS
+        </p>
+        <p style="color: #7f8c8d;">
+            Creado para estudiantes de Organización de Computadores - USACH 2024
+        </p>
+        <p style="margin-top: 20px; font-size: 0.9em; color: #95a5a6;">
+            💡 Tip: Practica traduciendo código C a Assembly manualmente
+        </p>
+    </div>
+</div>
+
+<script>
+function checkAnswer(questionName, correctAnswer, button) {
+    const selected = document.querySelector(`input[name="${questionName}"]:checked`);
+    const feedback = button.nextElementSibling;
+    
+    if (!selected) {
+        feedback.className = 'answer-feedback incorrect';
+        feedback.innerHTML = '⚠️ Por favor selecciona una respuesta.';
+        return;
+    }
+    
+    if (selected.value === correctAnswer) {
+        feedback.className = 'answer-feedback correct';
+        feedback.innerHTML = '✅ ¡Correcto! Excelente trabajo.';
+    } else {
+        feedback.className = 'answer-feedback incorrect';
+        feedback.innerHTML = '❌ Incorrecto. Revisa el material y vuelve a intentar. La respuesta correcta es: ' + correctAnswer.toUpperCase();
+    }
+}
+</script>
+</div>
+</div>
+
+
+</body>
+</html>
